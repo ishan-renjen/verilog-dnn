@@ -76,4 +76,21 @@ package fixedpoint;
         }
         return result;
     endfunction
+    
+    function fixed_point_t subtract(fixed_point_t a, fixed_point_t b);
+        fixed_point_t result;
+        result.integer_fixed = a.integer_fixed - b.integer_fixed;
+        result.decimal_fixed = a.decimal_fixed - b.decimal_fixed;
+        //decimal overflow
+        if(result.decimal_fixed < 8'sd127){
+            result.integer_fixed += 8'sd1;
+            result.decimal_fixed -= 8'sd256;
+        }
+        //under cant happen for decimal
+        //handle int underflow, overflow can't happen
+        if(result.integer_fixed < 8'sd-128){
+            result.integer_fixed = 8'sd-128;
+        }
+        return result;
+    endfunction
 endpackage
